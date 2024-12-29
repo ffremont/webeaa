@@ -1,6 +1,6 @@
 # WebEaa - Visualiseur d'Images Astronomiques
 
-Bienvenue sur **WebEaa**, une application web permettant de visualiser les images astronomiques sauvegardées sur un Raspberry Pi via un hotspot. Cette application surveille un répertoire spécifié pour de nouvelles images .jpg et les rend accessibles via une interface web.
+Bienvenue sur **WebEaa**, une application web permettant de visualiser les images astronomiques sauvegardées sur un Raspberry Pi via un hotspot. Cette application surveille un répertoire spécifié pour de nouvelles images .png et les rend accessibles via une interface web.
 
 ## Fonctionnalités
 
@@ -65,6 +65,7 @@ Un bouton de téléchargement est disponible pour récupérer la dernière image
 ### Variables d'environnement
 
 - **PORT** : Le port sur lequel l'application écoute (défaut : 3000).
+- **EAA_PATH** : Chemin à scruter (défaut : .).
 
 ### Personnalisation du Filigrane
 

@@ -31,6 +31,7 @@ const app: Express = express();
 
 app.use(express.static(__dirname + "/../public"));
 const port = process.env.PORT || 3000;
+const eaaPath = process.env.EAA_PATH || '.';
 
 app.get("/binary", (req: Request, res: Response) => {
   if (eaaJpg) {
@@ -121,7 +122,7 @@ app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
 
-Watcher(".", { recursive: false }, (evt, filename) => {
+Watcher(eaaPath, { recursive: false }, (evt, filename) => {
   const lowerFilename = filename.toLowerCase();
 
   if (!lowerFilename.endsWith(EXTENSION) || !existsSync(filename)) {
