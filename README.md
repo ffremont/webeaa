@@ -77,5 +77,7 @@ npm start "Votre filigrane personnalisé"
 Si aucun filigrane n'est spécifié, le texte par défaut suivant sera utilisé :
 
 ```
-EAA 9/10 Août 2024 | Florent FREMONT | tetesenlair.net
+"EAA $at | $name | F. FREMONT | tetesenlair.net"
 ```
+
+> **$at** correspond à la date et l'heure et **$name** au nom du fichier
