@@ -35,10 +35,11 @@ const eaaPath = process.env.EAA_PATH || '.';
 
 app.get("/binary", (req: Request, res: Response) => {
   if (eaaJpg) {
+    const safeName = imageName.lastIndexOf('/') > -1 ? imageName.substring(imageName.lastIndexOf('/')+1): imageName;
     res.setHeader("Content-Type", "image/png");
     res.setHeader("Cache-Control", "max-age=10");
     res.setHeader("x-ctimems", `${ctimeMs}`);
-    res.setHeader("x-imagename", imageName);
+    res.setHeader("x-imagename", safeName.substring(0, safeName.lastIndexOf('.')));
     res.send(eaaJpg);
   }else{
     res.status(404);
