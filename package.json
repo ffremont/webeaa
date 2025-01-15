@@ -1,8 +1,8 @@
 {
   "name": "webeaa",
-  "version": "1.0.2",
+  "version": "2.0.1",
   "type": "commonjs",
-  "description": "Application web pour réaliser des sessions grand public pour partager des png issue de live stacking astronomique.",
+  "description": "Application web pour réaliser des sessions grand public pour partager des jpg issue de live stacking astronomique.",
   "main": "dist/index.js",
   "bin": {
     "webeaa": "./dist/index.js"

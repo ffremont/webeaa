@@ -15,7 +15,7 @@ console.log(`%c
    ░▒▓█████████████▓▒░░▒▓████████▓▒░▒▓███████▓▒░░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ 
                                                                                                                                                        
   
-  Bienvenue sur webEaa, le visualiseur de .png issue de votre logiciel d'imagerie astronomique.
+  Bienvenue sur webEaa, le visualiseur de .jpg issue de votre logiciel d'imagerie astronomique.
   
 
   Auteur: Florent FREMONT
@@ -23,7 +23,7 @@ console.log(`%c
 `);
 const WATERMARK =
   process.argv[2] || "EAA $at | $name | F. FREMONT | tetesenlair.net";
-const EXTENSION = ".png";
+const EXTENSION = ".jpg";
 let eaaJpg = null;
 let ctimeMs = null;
 let imageName = '';
@@ -36,7 +36,7 @@ const eaaPath = process.env.EAA_PATH || '.';
 app.get("/binary", (req: Request, res: Response) => {
   if (eaaJpg) {
     const safeName = imageName.lastIndexOf('/') > -1 ? imageName.substring(imageName.lastIndexOf('/')+1): imageName;
-    res.setHeader("Content-Type", "image/png");
+    res.setHeader("Content-Type", "image/jpg");
     res.setHeader("Cache-Control", "max-age=10");
     res.setHeader("x-ctimems", `${ctimeMs}`);
     res.setHeader("x-imagename", safeName.substring(0, safeName.lastIndexOf('.')));
@@ -89,7 +89,7 @@ app.get("/live", (req: Request, res: Response) => {
     <div id="container">
     ${!eaaJpg ? '<p>La séance va bientôt démarrer.</p>': ''}
     </div>
-    <a ${!eaaJpg ?  'disabled': ''} id="download" href="/binary" download="${new Date().getTime()}-tetes-en-lair-eaa.png" class="download button is-link">Télécharger</a>
+    <a ${!eaaJpg ?  'disabled': ''} id="download" href="/binary" download="${new Date().getTime()}-tetes-en-lair-eaa.jpg" class="download button is-link">Télécharger</a>
     <script src="./watermark.min.js"></script>
     <script>
       fetch('/binary')
@@ -99,8 +99,6 @@ app.get("/live", (req: Request, res: Response) => {
           imagename: r.headers.get('x-imagename')
         }))
         .then(b => {
-              document.getElementById('download').setAttribute('href', URL.createObjectURL(b.bin));
-
               const ctimeMs = 
                watermark(['/binary'])
                 .image(watermark.text.lowerRight('${WATERMARK}'
@@ -110,6 +108,10 @@ app.get("/live", (req: Request, res: Response) => {
                 .then(function (img) {
                     document.getElementById('container').appendChild(img);
                     
+                    fetch(img.getAttribute('src')).
+                    then(r => r.blob()).then(b => {
+                        document.getElementById('download').setAttribute('href', URL.createObjectURL(b));
+                    });
                 });
           });
     </script>
@@ -133,7 +135,7 @@ Watcher(eaaPath, { recursive: false }, (evt, filename) => {
   console.log("⚡️ Nouvelle image détectée");
   const stat = statSync(filename);
   ctimeMs = stat.ctimeMs;
-  imageName = filename.replace(".png", "");
+  imageName = filename.replace(".jpg", "");
   eaaJpg = Buffer.from(readFileSync(filename, "binary"), "binary");
 });
 
@@ -141,20 +143,20 @@ Watcher(eaaPath, { recursive: false }, (evt, filename) => {
  * main func
  */
 const main = () => {
-  const pngs = readdirSync(".")
+  const jpgs = readdirSync(".")
     .filter((file) => file.toLowerCase().endsWith(EXTENSION))
     .map((file) => {
       const stat = statSync(file);
       return { file, ctimeMs: stat.ctimeMs };
     });
-  pngs.sort(function (a, b) {
+  jpgs.sort(function (a, b) {
     return b.ctimeMs - a.ctimeMs;
   });
-  if (pngs.length) {
-    console.log(`👋 Fichier "${pngs[0].file}" est le plus récent`);
-    eaaJpg = Buffer.from(readFileSync(pngs[0].file, "binary"), "binary");
-    imageName = pngs[0].file.replace('.png', '');
-    ctimeMs = pngs[0].ctimeMs;
+  if (jpgs.length) {
+    console.log(`👋 Fichier "${jpgs[0].file}" est le plus récent`);
+    eaaJpg = Buffer.from(readFileSync(jpgs[0].file, "binary"), "binary");
+    imageName = jpgs[0].file.replace('.jpg', '');
+    ctimeMs = jpgs[0].ctimeMs;
   }
 
   console.log(`\n\n👉 Rendez-vous sur http://localhost:${port}/live`);
